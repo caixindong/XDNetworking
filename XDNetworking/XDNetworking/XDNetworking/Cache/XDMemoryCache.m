@@ -10,9 +10,6 @@
 
 static NSCache *shareCache;
 
-/**
- *  到时可以拓展内存缓存策略
- */
 @implementation XDMemoryCache
 
 + (NSCache *)shareCache {
@@ -24,6 +21,10 @@ static NSCache *shareCache;
 }
 
 + (void)writeData:(id)data forKey:(NSString *)key {
+    assert(data);
+    
+    assert(key);
+    
     NSCache *cache = [XDMemoryCache shareCache];
     
     [cache setObject:data forKey:key];
@@ -31,6 +32,8 @@ static NSCache *shareCache;
 }
 
 + (id)readDataWithKey:(NSString *)key {
+    assert(key);
+    
     id data = nil;
     
     NSCache *cache = [XDMemoryCache shareCache];

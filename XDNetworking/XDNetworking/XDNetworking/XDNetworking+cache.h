@@ -49,4 +49,32 @@
  */
 + (NSURL *)getDownloadDataFromCacheWithRequestUrl:(NSString *)requestUrl;
 
+
++ (NSString *)getCacheDiretoryPath;
+
++ (NSString *)getDownDirectoryPath;
+
+/**
+ *  获取缓存大小
+ *
+ *  @return 缓存大小
+ */
++ (unsigned long long)totalCacheSize;
+
+/**
+ *  清除所有缓存
+ */
++ (void)clearTotalCache;
+
+/**
+ *  获取所有下载数据大小
+ *
+ *  @return 下载数据大小
+ */
++ (unsigned long long)totalDownloadDataSize;
+
+/**
+ *  清除下载数据
+ */
++ (void)clearDownloadData;
 @end

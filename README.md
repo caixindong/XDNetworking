@@ -143,6 +143,26 @@ POST请求
 + (void)cancelRequestWithURL:(NSString *)url;
 ```
 
+获取缓存大小
+
+```ObjC
+/**
+ *  获取缓存大小
+ *
+ *  @return 缓存大小
+ */
++ (unsigned long long)totalCacheSize;
+```
+
+清理缓存
+
+```ObjC
+/**
+ *  清除所有缓存
+ */
++ (void)clearTotalCache;
+```
+
 # Usage Tip
 `1. ` 对于cache与否，到时大家针对自己的业务数据的特征来决定是否开启cache,即时性或时效性的数据建议不开启缓存，一般建议开启，开启缓存后会回调两次，第一次获取是缓存数据，第二次获取的是最新的网络数据；     
 `2. ` 具体使用的时候，建议面向业务层再封装一次Service层或者将网络请求写进MVVM的viewModel中，向controller暴露只面向业务的参数。     

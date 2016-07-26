@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ *  到时可以拓展磁盘缓存策略
+ */
 @interface XDDistCache : NSObject
 
 /**
@@ -31,5 +34,21 @@
  */
 + (id)readDataFromDir:(NSString *)directory
              filename:(NSString *)filename;
+
+/**
+ *  获取目录中文件总大小
+ *
+ *  @param directory 目录名
+ *
+ *  @return 文件总大小
+ */
++ (unsigned long long)dataSizeInDir:(NSString *)directory;
+
+/**
+ *  清理目录中的文件
+ *
+ *  @param directory 目录名
+ */
++ (void)clearDataIinDir:(NSString *)directory;
 
 @end

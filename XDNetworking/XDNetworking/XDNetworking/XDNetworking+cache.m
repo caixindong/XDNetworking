@@ -11,11 +11,23 @@
 #import "XDDistCache.h"
 #import <CommonCrypto/CommonDigest.h>
 
+static NSString *const cacheDirKey = @"cacheDirKey";
+
+static NSString *const downloadDirKey = @"downloadDirKey";
+
+#define XD_NSUSERDEFAULT_GETTER(key) [[NSUserDefaults standardUserDefaults] objectForKey:key]
+
+#define XD_NSUSERDEFAULT_SETTER(value, key) [[NSUserDefaults standardUserDefaults] setObject:value forKey:key]
+
 @implementation XDNetworking (cache)
 
 + (void)cacheResponseObject:(id)responseObject
                  requestUrl:(NSString *)requestUrl
                      params:(NSDictionary *)params {
+    assert(responseObject);
+    
+    assert(requestUrl);
+    
     if (!params) params = @{};
     NSString *originString = [NSString stringWithFormat:@"%@+%@",requestUrl,params];
     NSString *hash = [self md5:originString];
@@ -28,13 +40,18 @@
         data = [NSJSONSerialization dataWithJSONObject:responseObject options:NSJSONWritingPrettyPrinted error:&error];
     }
     
-    if (data && hash && error == nil) {
+    if (error == nil) {
         //缓存到内存中
         [XDMemoryCache writeData:responseObject forKey:hash];
         
         //缓存到磁盘中
         //磁盘路径
-        NSString *directoryPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:@"XDNetworking"] stringByAppendingPathComponent:@"networkCache"];
+        NSString *directoryPath = nil;
+        directoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
+        if (!directoryPath) {
+            directoryPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:@"XDNetworking"] stringByAppendingPathComponent:@"networkCache"];
+            XD_NSUSERDEFAULT_SETTER(directoryPath,cacheDirKey);
+        }
         [XDDistCache writeData:data toDir:directoryPath filename:hash];
     }
     
@@ -42,18 +59,19 @@
 
 + (id)getCacheResponseObjectWithRequestUrl:(NSString *)requestUrl
                                     params:(NSDictionary *)params {
+    assert(requestUrl);
+    
     id cacheData = nil;
     
     if (!params) params = @{};
     NSString *originString = [NSString stringWithFormat:@"%@+%@",requestUrl,params];
     NSString *hash = [self md5:originString];
     
-     NSString *directoryPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:@"XDNetworking"] stringByAppendingPathComponent:@"networkCache"];
-    
     //先从内存中查找
     cacheData = [XDMemoryCache readDataWithKey:hash];
     
     if (!cacheData) {
+        NSString *directoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
         cacheData = [XDDistCache readDataFromDir:directoryPath filename:hash];
     }
     
@@ -62,15 +80,17 @@
 
 + (void)storeDownloadData:(NSData *)data
                requestUrl:(NSString *)requestUrl {
+    assert(data);
+    
+    assert(requestUrl);
+    
     NSString *fileName = nil;
     NSString *type = nil;
     NSArray *strArray = nil;
     
-    if (requestUrl) {
-        strArray = [requestUrl componentsSeparatedByString:@"."];
-        if (strArray.count > 0) {
-            type = strArray[strArray.count - 1];
-        }
+    strArray = [requestUrl componentsSeparatedByString:@"."];
+    if (strArray.count > 0) {
+        type = strArray[strArray.count - 1];
     }
     
     if (type) {
@@ -79,23 +99,31 @@
         fileName = [NSString stringWithFormat:@"%@",[self md5:requestUrl]];
     }
     
-    NSString *directoryPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:@"XDNetworking"] stringByAppendingPathComponent:@"download"];
+    NSString *directoryPath = nil;
+    directoryPath = XD_NSUSERDEFAULT_GETTER(downloadDirKey);
+    if (!directoryPath) {
+        directoryPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:@"XDNetworking"] stringByAppendingPathComponent:@"download"];
+        
+        XD_NSUSERDEFAULT_SETTER(directoryPath, downloadDirKey);
+    }
+    
     [XDDistCache writeData:data toDir:directoryPath filename:fileName];
 
 }
 
 + (NSURL *)getDownloadDataFromCacheWithRequestUrl:(NSString *)requestUrl {
+    assert(requestUrl);
+    
     NSData *data = nil;
     NSString *fileName = nil;
     NSString *type = nil;
     NSArray *strArray = nil;
     NSURL *fileUrl = nil;
     
-    if (requestUrl) {
-        strArray = [requestUrl componentsSeparatedByString:@"."];
-        if (strArray.count > 0) {
-            type = strArray[strArray.count - 1];
-        }
+
+    strArray = [requestUrl componentsSeparatedByString:@"."];
+    if (strArray.count > 0) {
+        type = strArray[strArray.count - 1];
     }
     
     if (type) {
@@ -104,7 +132,8 @@
         fileName = [NSString stringWithFormat:@"%@",[self md5:requestUrl]];
     }
     
-      NSString *directoryPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:@"XDNetworking"] stringByAppendingPathComponent:@"download"];
+    
+    NSString *directoryPath = XD_NSUSERDEFAULT_GETTER(downloadDirKey);
     
     data = [XDDistCache readDataFromDir:directoryPath filename:fileName];
     
@@ -114,6 +143,30 @@
     }
     
     return fileUrl;
+}
+
++ (unsigned long long)totalCacheSize {
+    NSString *diretoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
+
+    return [XDDistCache dataSizeInDir:diretoryPath];
+}
+
++ (void)clearTotalCache {
+    NSString *directoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
+    
+    [XDDistCache clearDataIinDir:directoryPath];
+}
+
++ (unsigned long long)totalDownloadDataSize {
+    NSString *diretoryPath = XD_NSUSERDEFAULT_GETTER(downloadDirKey);
+    
+    return [XDDistCache dataSizeInDir:diretoryPath];
+}
+
++ (void)clearDownloadData {
+    NSString *diretoryPath = XD_NSUSERDEFAULT_GETTER(downloadDirKey);
+    
+    [XDDistCache clearDataIinDir:diretoryPath];
 }
 
 #pragma mark - 散列值

@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ *  到时可以拓展内存缓存策略
+ */
 @interface XDMemoryCache : NSObject
 
 /**
