@@ -128,6 +128,7 @@ static int CACHEMAXSIZE = 10485760;
         return session;
     }
     
+    
     id responseObj = [self getCacheResponseObjectWithRequestUrl:url params:params];
     
     if (responseObj && cache) {
@@ -144,6 +145,7 @@ static int CACHEMAXSIZE = 10485760;
                       if (successBlock) successBlock(responseObject);
                       
                       if (cache) [self cacheResponseObject:responseObject requestUrl:url params:params];
+                      
                       
                       [[self allTasks] removeObject:session];
     

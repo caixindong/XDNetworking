@@ -49,9 +49,18 @@
  */
 + (NSURL *)getDownloadDataFromCacheWithRequestUrl:(NSString *)requestUrl;
 
-
+/**
+ *  获取缓存目录路径
+ *
+ *  @return 缓存目录路径
+ */
 + (NSString *)getCacheDiretoryPath;
 
+/**
+ *  获取下载目录路径
+ *
+ *  @return 下载目录路径
+ */
 + (NSString *)getDownDirectoryPath;
 
 /**
@@ -77,4 +86,7 @@
  *  清除下载数据
  */
 + (void)clearDownloadData;
+
+
+
 @end

@@ -40,6 +40,7 @@ static NSCache *shareCache;
     
     data = [cache objectForKey:key];
     
+    
     return data;
 }
 

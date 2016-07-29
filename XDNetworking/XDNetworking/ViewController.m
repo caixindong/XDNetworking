@@ -19,6 +19,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [XDNetworking getWithUrl:@"http://115.29.228.168:9191/workmap_dianAn/command/command.do?opCommand=userAction" cache:YES params:@{@"action":@"getDataList",
+        @"project_id":@"561113"
+    } progressBlock:^(int64_t bytesRead, int64_t totalBytes) {
+        
+    } successBlock:^(id response) {
+        NSLog(@"response is %@",response);
+    } failBlock:^(NSError *error) {
+        
+    }];
+    
 }
 
 - (void)didReceiveMemoryWarning {

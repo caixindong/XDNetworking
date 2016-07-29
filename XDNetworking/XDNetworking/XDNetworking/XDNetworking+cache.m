@@ -17,7 +17,7 @@ static NSString *const downloadDirKey = @"downloadDirKey";
 
 #define XD_NSUSERDEFAULT_GETTER(key) [[NSUserDefaults standardUserDefaults] objectForKey:key]
 
-#define XD_NSUSERDEFAULT_SETTER(value, key) [[NSUserDefaults standardUserDefaults] setObject:value forKey:key]
+#define XD_NSUSERDEFAULT_SETTER(value, key) [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];[[NSUserDefaults standardUserDefaults] synchronize]
 
 @implementation XDNetworking (cache)
 
@@ -72,7 +72,8 @@ static NSString *const downloadDirKey = @"downloadDirKey";
     
     if (!cacheData) {
         NSString *directoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
-        cacheData = [XDDistCache readDataFromDir:directoryPath filename:hash];
+        
+        if (directoryPath) cacheData = [XDDistCache readDataFromDir:directoryPath filename:hash];
     }
     
     return cacheData;
@@ -107,6 +108,7 @@ static NSString *const downloadDirKey = @"downloadDirKey";
         XD_NSUSERDEFAULT_SETTER(directoryPath, downloadDirKey);
     }
     
+    
     [XDDistCache writeData:data toDir:directoryPath filename:fileName];
 
 }
@@ -135,7 +137,7 @@ static NSString *const downloadDirKey = @"downloadDirKey";
     
     NSString *directoryPath = XD_NSUSERDEFAULT_GETTER(downloadDirKey);
     
-    data = [XDDistCache readDataFromDir:directoryPath filename:fileName];
+    if (directoryPath) data = [XDDistCache readDataFromDir:directoryPath filename:fileName];
     
     if (data) {
         NSString *path = [directoryPath stringByAppendingPathComponent:fileName];
@@ -167,6 +169,16 @@ static NSString *const downloadDirKey = @"downloadDirKey";
     NSString *diretoryPath = XD_NSUSERDEFAULT_GETTER(downloadDirKey);
     
     [XDDistCache clearDataIinDir:diretoryPath];
+}
+
++ (NSString *)getDownDirectoryPath {
+    NSString *diretoryPath = XD_NSUSERDEFAULT_GETTER(downloadDirKey);
+    return diretoryPath;
+}
+
++ (NSString *)getCacheDiretoryPath {
+    NSString *diretoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
+    return diretoryPath;
 }
 
 #pragma mark - 散列值
