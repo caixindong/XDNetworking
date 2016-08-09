@@ -9,14 +9,15 @@
 #import "XDNetworking.h"
 #import "AFNetworking.h"
 #import "AFNetworkActivityIndicatorManager.h"
-#import <CommonCrypto/CommonDigest.h>
 #import "XDNetworking+cache.h"
+#import "XDNetworking+requestManager.h"
+#import <CommonCrypto/CommonDigest.h>
 
 #define XD_ERROR_IMFORMATION @"网络出现错误，请检查网络连接"
 
 #define XD_ERROR [NSError errorWithDomain:@"com.caixindong.XDNetworking.ErrorDomain" code:-999 userInfo:@{ NSLocalizedDescriptionKey:XD_ERROR_IMFORMATION}]
 
-static NSMutableArray   *requestTasks;
+static NSMutableArray   *requestTasksPool;
 
 static NSDictionary     *headers;
 
@@ -106,20 +107,22 @@ static int CACHEMAXSIZE = 10485760;
 + (NSMutableArray *)allTasks {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        if (requestTasks == nil) requestTasks = [NSMutableArray array];
+        if (requestTasksPool == nil) requestTasksPool = [NSMutableArray array];
     });
     
-    return requestTasks;
+    return requestTasksPool;
 }
 
 #pragma mark - get
 + (XDURLSessionTask *)getWithUrl:(NSString *)url
+                  refreshRequest:(BOOL)refresh
                            cache:(BOOL)cache
                           params:(NSDictionary *)params
                    progressBlock:(XDGetProgress)progressBlock
                     successBlock:(XDResponseSuccessBlock)successBlock
                        failBlock:(XDResponseFailBlock)failBlock {
-    XDURLSessionTask *session = nil;
+    //将session拷贝到堆中，block内部才可以获取得到session
+    __block XDURLSessionTask *session = nil;
     
     AFHTTPSessionManager *manager = [self manager];
     
@@ -146,7 +149,6 @@ static int CACHEMAXSIZE = 10485760;
                       
                       if (cache) [self cacheResponseObject:responseObject requestUrl:url params:params];
                       
-                      
                       [[self allTasks] removeObject:session];
     
                   } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -155,21 +157,29 @@ static int CACHEMAXSIZE = 10485760;
                       
                   }];
     
-    [session resume];
-    
-    if (session) [[self allTasks] addObject:session];
+    if ([self haveSameRequestInTasksPool:session] && !refresh) {
+        [session cancel];
+        return session;
+    }else {
+        XDURLSessionTask *oldTask = [self cancleSameRequestInTasksPool:session];
+        if (oldTask) [[self allTasks] removeObject:oldTask];
+        [session resume];
+        if (session) [[self allTasks] addObject:session];
+        return session;
+    }
     
     return session;
 }
 
 #pragma mark - post
 + (XDURLSessionTask *)postWithUrl:(NSString *)url
+                   refreshRequest:(BOOL)refresh
                             cache:(BOOL)cache
                            params:(NSDictionary *)params
                     progressBlock:(XDPostProgress)progressBlock
                      successBlock:(XDResponseSuccessBlock)successBlock
                         failBlock:(XDResponseFailBlock)failBlock {
-    XDURLSessionTask *session = nil;
+    __block XDURLSessionTask *session = nil;
     
     AFHTTPSessionManager *manager = [self manager];
     
@@ -192,10 +202,12 @@ static int CACHEMAXSIZE = 10485760;
                        
                    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                        if (successBlock) successBlock(responseObject);
-                       
+
                        if (cache) [self cacheResponseObject:responseObject requestUrl:url params:params];
                        
-                       [[self allTasks] removeObject:session];
+                       if ([[self allTasks] containsObject:session]) {
+                           [[self allTasks] removeObject:session];
+                       }
                        
                    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                        if (failBlock) failBlock(error);
@@ -203,12 +215,17 @@ static int CACHEMAXSIZE = 10485760;
                        
                    }];
     
-    [session resume];
     
-    if (session) [[self allTasks] addObject:session];
-    
-    return session;
-    
+    if ([self haveSameRequestInTasksPool:session] && !refresh) {
+        [session cancel];
+        return session;
+    }else {
+        XDURLSessionTask *oldTask = [self cancleSameRequestInTasksPool:session];
+        if (oldTask) [[self allTasks] removeObject:oldTask];
+        [session resume];
+        if (session) [[self allTasks] addObject:session];
+        return session;
+    }
 }
 
 #pragma mark - 文件上传
@@ -220,7 +237,7 @@ static int CACHEMAXSIZE = 10485760;
                           progressBlock:(XDUploadProgressBlock)progressBlock
                            successBlock:(XDResponseSuccessBlock)successBlock
                               failBlock:(XDResponseFailBlock)failBlock {
-    XDURLSessionTask *session = nil;
+    __block XDURLSessionTask *session = nil;
     
     AFHTTPSessionManager *manager = [self manager];
     
@@ -286,7 +303,7 @@ static int CACHEMAXSIZE = 10485760;
     
     NSInteger count = datas.count;
     for (int i = 0; i < count; i++) {
-        XDURLSessionTask *session = nil;
+        __block XDURLSessionTask *session = nil;
         
         dispatch_group_enter(uploadGroup);
         
@@ -353,7 +370,7 @@ static int CACHEMAXSIZE = 10485760;
                             failBlock:(XDDownloadFailBlock)failBlock {
     NSString *type = nil;
     NSArray *subStringArr = nil;
-    XDURLSessionTask *session = nil;
+    __block XDURLSessionTask *session = nil;
     
     NSURL *fileUrl = [self getDownloadDataFromCacheWithRequestUrl:url];
     
@@ -437,5 +454,8 @@ static int CACHEMAXSIZE = 10485760;
     headers = httpHeader;
 }
 
++ (NSArray *)currentRunningTasks {
+    return [[self allTasks] copy];
+}
 
 @end

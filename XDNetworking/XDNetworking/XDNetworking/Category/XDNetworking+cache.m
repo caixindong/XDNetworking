@@ -186,7 +186,7 @@ static NSString *const downloadDirKey = @"downloadDirKey";
     if (string == nil || string.length == 0) {
         return nil;
     }
-    
+
     unsigned char digest[CC_MD5_DIGEST_LENGTH],i;
     
     CC_MD5([string UTF8String],(int)[string lengthOfBytesUsingEncoding:NSUTF8StringEncoding],digest);

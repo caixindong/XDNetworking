@@ -29,9 +29,11 @@
 		4E17167E1D45A2DC00779A68 /* UIRefreshControl+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E17166E1D45A2DC00779A68 /* UIRefreshControl+AFNetworking.m */; };
 		4E17167F1D45A2DC00779A68 /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E1716701D45A2DC00779A68 /* UIWebView+AFNetworking.m */; };
 		4E1716821D45A30600779A68 /* XDNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E1716811D45A30600779A68 /* XDNetworking.m */; };
-		4E1716851D45BC3700779A68 /* XDNetworking+cache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E1716841D45BC3700779A68 /* XDNetworking+cache.m */; };
 		4E1716891D45C4A600779A68 /* XDMemoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E1716881D45C4A600779A68 /* XDMemoryCache.m */; };
 		4E17168C1D45C68100779A68 /* XDDistCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E17168B1D45C68100779A68 /* XDDistCache.m */; };
+		4E177AD01D59C17F00ED4DCB /* XDNetworking+cache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E177ACF1D59C17F00ED4DCB /* XDNetworking+cache.m */; };
+		4E177AD31D59C21300ED4DCB /* NSURLRequest+decide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E177AD21D59C21300ED4DCB /* NSURLRequest+decide.m */; };
+		4E177AD61D59DA5900ED4DCB /* XDNetworking+requestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E177AD51D59DA5900ED4DCB /* XDNetworking+requestManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,12 +82,16 @@
 		4E1716701D45A2DC00779A68 /* UIWebView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+AFNetworking.m"; sourceTree = "<group>"; };
 		4E1716801D45A30600779A68 /* XDNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDNetworking.h; sourceTree = "<group>"; };
 		4E1716811D45A30600779A68 /* XDNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDNetworking.m; sourceTree = "<group>"; };
-		4E1716831D45BC3700779A68 /* XDNetworking+cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XDNetworking+cache.h"; sourceTree = "<group>"; };
-		4E1716841D45BC3700779A68 /* XDNetworking+cache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XDNetworking+cache.m"; sourceTree = "<group>"; };
 		4E1716871D45C4A600779A68 /* XDMemoryCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDMemoryCache.h; sourceTree = "<group>"; };
 		4E1716881D45C4A600779A68 /* XDMemoryCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDMemoryCache.m; sourceTree = "<group>"; };
 		4E17168A1D45C68100779A68 /* XDDistCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XDDistCache.h; sourceTree = "<group>"; };
 		4E17168B1D45C68100779A68 /* XDDistCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XDDistCache.m; sourceTree = "<group>"; };
+		4E177ACE1D59C17F00ED4DCB /* XDNetworking+cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XDNetworking+cache.h"; sourceTree = "<group>"; };
+		4E177ACF1D59C17F00ED4DCB /* XDNetworking+cache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XDNetworking+cache.m"; sourceTree = "<group>"; };
+		4E177AD11D59C21300ED4DCB /* NSURLRequest+decide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLRequest+decide.h"; sourceTree = "<group>"; };
+		4E177AD21D59C21300ED4DCB /* NSURLRequest+decide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLRequest+decide.m"; sourceTree = "<group>"; };
+		4E177AD41D59DA5900ED4DCB /* XDNetworking+requestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XDNetworking+requestManager.h"; sourceTree = "<group>"; };
+		4E177AD51D59DA5900ED4DCB /* XDNetworking+requestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XDNetworking+requestManager.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,8 +151,7 @@
 			children = (
 				4E1716801D45A30600779A68 /* XDNetworking.h */,
 				4E1716811D45A30600779A68 /* XDNetworking.m */,
-				4E1716831D45BC3700779A68 /* XDNetworking+cache.h */,
-				4E1716841D45BC3700779A68 /* XDNetworking+cache.m */,
+				4E177ACD1D59C17F00ED4DCB /* Category */,
 				4E1716861D45C47C00779A68 /* Cache */,
 				4E17164D1D45A2B400779A68 /* BaseKit */,
 			);
@@ -218,6 +223,19 @@
 				4E17168B1D45C68100779A68 /* XDDistCache.m */,
 			);
 			path = Cache;
+			sourceTree = "<group>";
+		};
+		4E177ACD1D59C17F00ED4DCB /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				4E177ACE1D59C17F00ED4DCB /* XDNetworking+cache.h */,
+				4E177ACF1D59C17F00ED4DCB /* XDNetworking+cache.m */,
+				4E177AD11D59C21300ED4DCB /* NSURLRequest+decide.h */,
+				4E177AD21D59C21300ED4DCB /* NSURLRequest+decide.m */,
+				4E177AD41D59DA5900ED4DCB /* XDNetworking+requestManager.h */,
+				4E177AD51D59DA5900ED4DCB /* XDNetworking+requestManager.m */,
+			);
+			path = Category;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -302,15 +320,17 @@
 				4E1716721D45A2DC00779A68 /* AFNetworkReachabilityManager.m in Sources */,
 				4E17167E1D45A2DC00779A68 /* UIRefreshControl+AFNetworking.m in Sources */,
 				4E1716371D45A28600779A68 /* main.m in Sources */,
+				4E177AD01D59C17F00ED4DCB /* XDNetworking+cache.m in Sources */,
 				4E1716771D45A2DC00779A68 /* AFAutoPurgingImageCache.m in Sources */,
 				4E1716731D45A2DC00779A68 /* AFSecurityPolicy.m in Sources */,
 				4E1716741D45A2DC00779A68 /* AFURLRequestSerialization.m in Sources */,
+				4E177AD31D59C21300ED4DCB /* NSURLRequest+decide.m in Sources */,
 				4E1716791D45A2DC00779A68 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				4E1716821D45A30600779A68 /* XDNetworking.m in Sources */,
+				4E177AD61D59DA5900ED4DCB /* XDNetworking+requestManager.m in Sources */,
 				4E1716751D45A2DC00779A68 /* AFURLResponseSerialization.m in Sources */,
 				4E1716711D45A2DC00779A68 /* AFHTTPSessionManager.m in Sources */,
 				4E1716781D45A2DC00779A68 /* AFImageDownloader.m in Sources */,
-				4E1716851D45BC3700779A68 /* XDNetworking+cache.m in Sources */,
 				4E17167A1D45A2DC00779A68 /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
