@@ -1,9 +1,9 @@
-# XDNetworking
+# XDNetworking 1.1
 A Network framework based on AFNetworking
 
 # More Infomation
-基于AFNetworking3.0封装网络请求功能，API面向业务层更友好，基础功能包括GET、POST、下载、单文件上传、多文件上传、取消网络请求。此外拓展出请求管理功能和缓存功能，缓存分为内存缓存和磁盘缓存。
-
+基于AFNetworking3.0封装网络请求功能，API面向业务层更友好，基础功能包括GET、POST、下载、单文件上传、多文件上传、取消网络请求。此外拓展出缓存功能，缓存分为内存缓存和磁盘缓存。       
+1.1版本添加了请求管理功能。    
 # Usage
 
 将XDNetworking包拉进工程
