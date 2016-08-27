@@ -1,9 +1,10 @@
-# XDNetworking 1.1
+# XDNetworking 1.2
 A Network framework based on AFNetworking
 
 # More Infomation
 基于AFNetworking3.0封装网络请求功能，API面向业务层更友好，基础功能包括GET、POST、下载、单文件上传、多文件上传、取消网络请求。此外拓展出缓存功能，缓存分为内存缓存和磁盘缓存。       
-1.1版本新增重复请求管理功能。    
+1.1版本新增重复请求管理功能。        
+==1.2版本,上层的API没有修改，缓存那里新增LRU缓存淘汰算法，具体实现，可以看XD_LRUManager。==     
 # Usage
 
 将XDNetworking包拉进工程
@@ -193,6 +194,5 @@ POST请求
 `3. ` 具体使用的时候，建议面向业务层再封装一次Service层或者将网络请求写进MVVM的viewModel中，向controller暴露只面向业务的参数。      
 
 # Extension For Future
-`1. ` 为缓存添加相应的缓存淘汰算法LRU；         
-`2. ` 再封装面向业务更友好的manager，管理业务层的API，使其方便在不同网络环境下切换（测试环境与正式环境......）     
+每个请求的API对象化，业务人员能够更加方便地对每个请求进行配置，配置相应的请求参数、缓存策略以及其他配置参数，方便管理业务层的API...   
 
