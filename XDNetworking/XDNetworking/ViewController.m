@@ -7,8 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "XDNetworking.h"
-
+#import "XDNetworking+cache.h"
 
 @interface ViewController ()
 
@@ -19,21 +18,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-   
+        NSLog(@"size is %llu",[XDNetworking totalCacheSize]);
+
+    
     
 }
 - (IBAction)sendRequest:(UIButton *)sender {
-    [XDNetworking getWithUrl:@"http://115.29.228.168:9191/workmap_dianAn/command/command.do?opCommand=userAction"
+
+    [XDNetworking postWithUrl:@"http://115.29.228.168:9191/workmap_dianAn/command/command.do?opCommand=userAction"
                refreshRequest:NO
-                        cache:NO params:@{@"action":@"getDataList",
+                        cache:YES params:@{@"action":@"getDataList",
                                                                                                                                      @"project_id":@"561113"
                                                                                                                                      } progressBlock:^(int64_t bytesRead, int64_t totalBytes) {
                                                                                                                                          
                                                                                                                                      } successBlock:^(id response) {
-                                                                                                                                         //NSLog(@"response is %@",response);
+                                                                                                                                         //NSLog(@"response is %@",response[@"other"]);
+                                                                                                                                         
+                                                                                                                                             NSLog(@"sss size is %llu",[XDNetworking totalCacheSize]);
                                                                                                                                      } failBlock:^(NSError *error) {
                                                                                                                                          
                                                                                                                                      }];
+
 }
 
 - (void)didReceiveMemoryWarning {

@@ -34,6 +34,7 @@
 		4E177AD01D59C17F00ED4DCB /* XDNetworking+cache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E177ACF1D59C17F00ED4DCB /* XDNetworking+cache.m */; };
 		4E177AD31D59C21300ED4DCB /* NSURLRequest+decide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E177AD21D59C21300ED4DCB /* NSURLRequest+decide.m */; };
 		4E177AD61D59DA5900ED4DCB /* XDNetworking+requestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E177AD51D59DA5900ED4DCB /* XDNetworking+requestManager.m */; };
+		4E4FC1541D71D88900004B34 /* XD_LRUManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E4FC1531D71D88900004B34 /* XD_LRUManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +93,9 @@
 		4E177AD21D59C21300ED4DCB /* NSURLRequest+decide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLRequest+decide.m"; sourceTree = "<group>"; };
 		4E177AD41D59DA5900ED4DCB /* XDNetworking+requestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XDNetworking+requestManager.h"; sourceTree = "<group>"; };
 		4E177AD51D59DA5900ED4DCB /* XDNetworking+requestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XDNetworking+requestManager.m"; sourceTree = "<group>"; };
+		4E4FC14E1D71D7DF00004B34 /* XDNetworkingMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XDNetworkingMacro.h; sourceTree = "<group>"; };
+		4E4FC1521D71D88900004B34 /* XD_LRUManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XD_LRUManager.h; sourceTree = "<group>"; };
+		4E4FC1531D71D88900004B34 /* XD_LRUManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XD_LRUManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +153,7 @@
 		4E17164C1D45A2B400779A68 /* XDNetworking */ = {
 			isa = PBXGroup;
 			children = (
+				4E4FC14E1D71D7DF00004B34 /* XDNetworkingMacro.h */,
 				4E1716801D45A30600779A68 /* XDNetworking.h */,
 				4E1716811D45A30600779A68 /* XDNetworking.m */,
 				4E177ACD1D59C17F00ED4DCB /* Category */,
@@ -221,6 +226,8 @@
 				4E1716881D45C4A600779A68 /* XDMemoryCache.m */,
 				4E17168A1D45C68100779A68 /* XDDistCache.h */,
 				4E17168B1D45C68100779A68 /* XDDistCache.m */,
+				4E4FC1521D71D88900004B34 /* XD_LRUManager.h */,
+				4E4FC1531D71D88900004B34 /* XD_LRUManager.m */,
 			);
 			path = Cache;
 			sourceTree = "<group>";
@@ -322,6 +329,7 @@
 				4E1716371D45A28600779A68 /* main.m in Sources */,
 				4E177AD01D59C17F00ED4DCB /* XDNetworking+cache.m in Sources */,
 				4E1716771D45A2DC00779A68 /* AFAutoPurgingImageCache.m in Sources */,
+				4E4FC1541D71D88900004B34 /* XD_LRUManager.m in Sources */,
 				4E1716731D45A2DC00779A68 /* AFSecurityPolicy.m in Sources */,
 				4E1716741D45A2DC00779A68 /* AFURLRequestSerialization.m in Sources */,
 				4E177AD31D59C21300ED4DCB /* NSURLRequest+decide.m in Sources */,

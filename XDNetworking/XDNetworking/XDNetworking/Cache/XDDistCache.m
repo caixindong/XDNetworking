@@ -8,6 +8,7 @@
 
 #import "XDDistCache.h"
 
+
 @implementation XDDistCache
 
 + (void)writeData:(id)data
@@ -92,5 +93,18 @@
     }
 }
 
++ (void)deleteCache:(NSString *)fileUrl {
+    if (fileUrl) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:fileUrl]) {
+            NSError *error = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:fileUrl error:&error];
+            if (error) {
+                NSLog(@"删除文件出现错误出现错误：%@",error.localizedDescription);
+            }
+        }else {
+            NSLog(@"不存在文件");   
+        }
+    }
+}
 
 @end

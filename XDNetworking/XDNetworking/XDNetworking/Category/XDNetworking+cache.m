@@ -10,14 +10,13 @@
 #import "XDMemoryCache.h"
 #import "XDDistCache.h"
 #import <CommonCrypto/CommonDigest.h>
+#import "XD_LRUManager.h"
 
 static NSString *const cacheDirKey = @"cacheDirKey";
 
 static NSString *const downloadDirKey = @"downloadDirKey";
 
-#define XD_NSUSERDEFAULT_GETTER(key) [[NSUserDefaults standardUserDefaults] objectForKey:key]
 
-#define XD_NSUSERDEFAULT_SETTER(value, key) [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];[[NSUserDefaults standardUserDefaults] synchronize]
 
 @implementation XDNetworking (cache)
 
@@ -53,6 +52,8 @@ static NSString *const downloadDirKey = @"downloadDirKey";
             XD_NSUSERDEFAULT_SETTER(directoryPath,cacheDirKey);
         }
         [XDDistCache writeData:data toDir:directoryPath filename:hash];
+        
+        [[XD_LRUManager shareManager] addFileNode:hash];
     }
     
 }
@@ -73,7 +74,10 @@ static NSString *const downloadDirKey = @"downloadDirKey";
     if (!cacheData) {
         NSString *directoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
         
-        if (directoryPath) cacheData = [XDDistCache readDataFromDir:directoryPath filename:hash];
+        if (directoryPath) {
+            cacheData = [XDDistCache readDataFromDir:directoryPath filename:hash];
+            [[XD_LRUManager shareManager] refreshIndexOfFileNode:hash];
+        }
     }
     
     return cacheData;
@@ -179,6 +183,15 @@ static NSString *const downloadDirKey = @"downloadDirKey";
 + (NSString *)getCacheDiretoryPath {
     NSString *diretoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
     return diretoryPath;
+}
+
++ (void)clearLRUCache {
+    NSString *fileName = [[XD_LRUManager shareManager] removeLRUFileNode];
+    NSString *directoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
+    if (directoryPath && fileName) {
+        NSString *filePath = [directoryPath stringByAppendingPathComponent:fileName];
+        [XDDistCache deleteCache:filePath];
+    }
 }
 
 #pragma mark - 散列值

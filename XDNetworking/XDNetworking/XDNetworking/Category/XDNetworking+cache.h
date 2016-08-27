@@ -76,6 +76,11 @@
 + (void)clearTotalCache;
 
 /**
+ *  清除最近最少使用的缓存，用LRU算法实现
+ */
++ (void)clearLRUCache;
+
+/**
  *  获取所有下载数据大小
  *
  *  @return 下载数据大小

@@ -51,4 +51,11 @@
  */
 + (void)clearDataIinDir:(NSString *)directory;
 
+/**
+ *  删除某文件
+ *
+ *  @param fileUrl 文件路径
+ */
++ (void)deleteCache:(NSString *)fileUrl;
+
 @end

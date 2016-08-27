@@ -13,9 +13,7 @@
 #import "XDNetworking+requestManager.h"
 #import <CommonCrypto/CommonDigest.h>
 
-#define XD_ERROR_IMFORMATION @"网络出现错误，请检查网络连接"
 
-#define XD_ERROR [NSError errorWithDomain:@"com.caixindong.XDNetworking.ErrorDomain" code:-999 userInfo:@{ NSLocalizedDescriptionKey:XD_ERROR_IMFORMATION}]
 
 static NSMutableArray   *requestTasksPool;
 
@@ -70,7 +68,7 @@ static int CACHEMAXSIZE = 10485760;
     //每次网络请求的时候，检查此时磁盘中的缓存大小，如果超过阈值，则清理所有缓存
     //未来优化点：1、这里到时会做进一步优化，到时会有两种清理策略，一种基于时间维度，一种基于缓存大小,
     //          2、清理也不会清理全部，会采取LRU算法来淘汰在磁盘中价值最低的缓存
-    if ([self totalCacheSize] > CACHEMAXSIZE) [self clearTotalCache];
+    if ([self totalCacheSize] > CACHEMAXSIZE) [self clearLRUCache];
     
     return manager;
 }
