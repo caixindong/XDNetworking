@@ -61,7 +61,7 @@ static NSTimeInterval   requestTimeout = 20.f;
     
     [self checkNetworkStatus];
     
-    //每次网络请求的时候，检查此时磁盘中的缓存大小，如果超过阈值，则清理LRU缓存
+    //每次网络请求的时候，检查此时磁盘中的缓存大小，阈值默认是40MB，如果超过阈值，则清理LRU缓存,同时也会清理过期缓存，缓存默认SSL是7天，磁盘缓存的大小和SSL的设置可以通过该方法[XDCacheManager shareManager] setCacheTime: diskCapacity:]设置
     [[XDCacheManager shareManager] clearLRUCache];
     
     return manager;

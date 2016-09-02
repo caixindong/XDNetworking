@@ -17,7 +17,7 @@ static NSString *const cacheDirKey = @"cacheDirKey";
 
 static NSString *const downloadDirKey = @"downloadDirKey";
 
-static NSUInteger diskCapacity = 1024;
+static NSUInteger diskCapacity = 40 * 1024 * 1024;
 
 static NSTimeInterval cacheTime = 7 * 24 * 60 * 60;
 
