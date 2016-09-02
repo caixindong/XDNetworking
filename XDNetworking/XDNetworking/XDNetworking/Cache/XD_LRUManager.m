@@ -17,7 +17,6 @@ static NSString *const XD_LRUManagerName = @"XD_LRUManagerName";
 
 @interface XD_LRUManager()
 
-
 @end
 
 @implementation XD_LRUManager
@@ -36,13 +35,24 @@ static NSString *const XD_LRUManagerName = @"XD_LRUManagerName";
 }
 - (void)addFileNode:(NSString *)filename {
     NSArray *array = [operationQueue copy];
-    [array enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isEqualToString:filename]) {
+    
+    //优化遍历
+    NSArray *reverseArray = [[array reverseObjectEnumerator] allObjects];
+    
+    [reverseArray enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj[@"fileName"] isEqualToString:filename]) {
             [operationQueue removeObjectAtIndex:idx];
             *stop = YES;
         }
+
     }];
-    [operationQueue addObject:filename];
+    
+    NSDate *date = [NSDate date];
+    
+    NSDictionary *newDic = @{@"fileName":filename,@"date":date};
+    
+    [operationQueue addObject:newDic];
+    
     XD_NSUSERDEFAULT_SETTER([operationQueue copy], XD_LRUManagerName);
 }
 
@@ -50,14 +60,31 @@ static NSString *const XD_LRUManagerName = @"XD_LRUManagerName";
     [self addFileNode:filename];
 }
 
-- (NSString *)removeLRUFileNode {
-    NSString *removeFile = nil;
+- (NSArray *)removeLRUFileNodeWithCacheTime:(NSTimeInterval)time {
+    NSMutableArray *result = [NSMutableArray array];
+    
     if (operationQueue.count > 0) {
-        removeFile = [operationQueue firstObject];
-        [operationQueue removeObjectAtIndex:0];
+        
+        NSArray *tmpArray = [operationQueue copy];
+        
+        [tmpArray enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSDate *date = obj[@"date"];
+            NSDate *newDate = [date dateByAddingTimeInterval:time];
+            if ([[NSDate date] compare:newDate] == NSOrderedDescending) {
+                [result addObject:obj[@"fileName"]];
+                [operationQueue removeObjectAtIndex:idx];
+            }
+        }];
+        
+        if (result.count == 0) {
+            NSString *removeFileName = [operationQueue firstObject][@"fileName"];
+            [result addObject:removeFileName];
+            [operationQueue removeObjectAtIndex:0];
+        }
+        
         XD_NSUSERDEFAULT_SETTER([operationQueue copy], XD_LRUManagerName);
     }
-    return removeFile;
+    return [result copy];
 
 }
 

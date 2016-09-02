@@ -9,10 +9,8 @@
 #import "XDNetworking.h"
 #import "AFNetworking.h"
 #import "AFNetworkActivityIndicatorManager.h"
-#import "XDNetworking+cache.h"
 #import "XDNetworking+requestManager.h"
-#import <CommonCrypto/CommonDigest.h>
-
+#import "XDCacheManager.h"
 
 
 static NSMutableArray   *requestTasksPool;
@@ -22,8 +20,6 @@ static NSDictionary     *headers;
 static XDNetworkStatus  networkStatus;
 
 static NSTimeInterval   requestTimeout = 20.f;
-
-static int CACHEMAXSIZE = 10485760;
 
 @implementation XDNetworking
 
@@ -65,10 +61,8 @@ static int CACHEMAXSIZE = 10485760;
     
     [self checkNetworkStatus];
     
-    //每次网络请求的时候，检查此时磁盘中的缓存大小，如果超过阈值，则清理所有缓存
-    //未来优化点：1、这里到时会做进一步优化，到时会有两种清理策略，一种基于时间维度，一种基于缓存大小,
-    //          2、清理也不会清理全部，会采取LRU算法来淘汰在磁盘中价值最低的缓存
-    if ([self totalCacheSize] > CACHEMAXSIZE) [self clearLRUCache];
+    //每次网络请求的时候，检查此时磁盘中的缓存大小，如果超过阈值，则清理LRU缓存
+    [[XDCacheManager shareManager] clearLRUCache];
     
     return manager;
 }
@@ -130,7 +124,7 @@ static int CACHEMAXSIZE = 10485760;
     }
     
     
-    id responseObj = [self getCacheResponseObjectWithRequestUrl:url params:params];
+    id responseObj = [[XDCacheManager shareManager] getCacheResponseObjectWithRequestUrl:url params:params];
     
     if (responseObj && cache) {
         if (successBlock) successBlock(responseObj);
@@ -145,7 +139,7 @@ static int CACHEMAXSIZE = 10485760;
                   } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                       if (successBlock) successBlock(responseObject);
                       
-                      if (cache) [self cacheResponseObject:responseObject requestUrl:url params:params];
+                      if (cache) [[XDCacheManager shareManager] cacheResponseObject:responseObject requestUrl:url params:params];
                       
                       [[self allTasks] removeObject:session];
     
@@ -186,7 +180,7 @@ static int CACHEMAXSIZE = 10485760;
         return session;
     }
     
-    id responseObj = [self getCacheResponseObjectWithRequestUrl:url params:params];
+    id responseObj = [[XDCacheManager shareManager] getCacheResponseObjectWithRequestUrl:url params:params];
     
     if (responseObj && cache) {
         if (successBlock) successBlock(responseObj);
@@ -201,7 +195,7 @@ static int CACHEMAXSIZE = 10485760;
                    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                        if (successBlock) successBlock(responseObject);
 
-                       if (cache) [self cacheResponseObject:responseObject requestUrl:url params:params];
+                       if (cache) [[XDCacheManager shareManager] cacheResponseObject:responseObject requestUrl:url params:params];
                        
                        if ([[self allTasks] containsObject:session]) {
                            [[self allTasks] removeObject:session];
@@ -370,7 +364,7 @@ static int CACHEMAXSIZE = 10485760;
     NSArray *subStringArr = nil;
     __block XDURLSessionTask *session = nil;
     
-    NSURL *fileUrl = [self getDownloadDataFromCacheWithRequestUrl:url];
+    NSURL *fileUrl = [[XDCacheManager shareManager] getDownloadDataFromCacheWithRequestUrl:url];
     
     if (fileUrl) {
         if (successBlock) successBlock(fileUrl);
@@ -397,9 +391,9 @@ static int CACHEMAXSIZE = 10485760;
                       if (successBlock) {
                           NSData *dataObj = (NSData *)responseObject;
                           
-                          [self storeDownloadData:dataObj requestUrl:url];
+                          [[XDCacheManager shareManager] storeDownloadData:dataObj requestUrl:url];
                           
-                          NSURL *downFileUrl = [self getDownloadDataFromCacheWithRequestUrl:url];
+                          NSURL *downFileUrl = [[XDCacheManager shareManager] getDownloadDataFromCacheWithRequestUrl:url];
                           
                           successBlock(downFileUrl);
                       }
@@ -454,6 +448,36 @@ static int CACHEMAXSIZE = 10485760;
 
 + (NSArray *)currentRunningTasks {
     return [[self allTasks] copy];
+}
+
+@end
+
+
+@implementation XDNetworking (cache)
+
++ (NSUInteger)totalCacheSize {
+    return [[XDCacheManager shareManager] totalCacheSize];
+}
+
++ (NSUInteger)totalDownloadDataSize {
+    return [[XDCacheManager shareManager] totalDownloadDataSize];
+}
+
++ (void)clearDownloadData {
+    [[XDCacheManager shareManager] clearDownloadData];
+}
+
++ (NSString *)getDownDirectoryPath {
+    return [[XDCacheManager shareManager] getDownDirectoryPath];
+}
+
++ (NSString *)getCacheDiretoryPath {
+
+    return [[XDCacheManager shareManager] getCacheDiretoryPath];
+}
+
++ (void)clearTotalCache {
+    [[XDCacheManager shareManager] clearTotalCache];
 }
 
 @end

@@ -52,15 +52,14 @@
     return data;
 }
 
-+ (unsigned long long)dataSizeInDir:(NSString *)directory {
++ (NSUInteger)dataSizeInDir:(NSString *)directory {
     
     if (!directory) {
         return 0;
     }
     
     BOOL isDir = NO;
-    unsigned long long total = 0;
-    
+    NSUInteger total = 0;
     if ([[NSFileManager defaultManager] fileExistsAtPath:directory isDirectory:&isDir]) {
         if (isDir) {
             NSError *error = nil;

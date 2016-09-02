@@ -42,7 +42,7 @@
  *
  *  @return 文件总大小
  */
-+ (unsigned long long)dataSizeInDir:(NSString *)directory;
++ (NSUInteger)dataSizeInDir:(NSString *)directory;
 
 /**
  *  清理目录中的文件

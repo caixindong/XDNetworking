@@ -35,10 +35,12 @@
 - (void)refreshIndexOfFileNode:(NSString *)filename;
 
 /**
- *  删除最近最少使用的结点
+ *  删除最近最久未使用的缓存
  *
- *  @return 结点存储的文件名
+ *  @param time 缓存时间
+ *
+ *  @return 删除结点的文件名列表
  */
-- (NSString *)removeLRUFileNode;
+- (NSArray *)removeLRUFileNodeWithCacheTime:(NSTimeInterval) time;
 
 @end
