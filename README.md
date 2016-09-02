@@ -4,7 +4,7 @@ A Network framework based on AFNetworking
 # More Infomation
 基于AFNetworking3.0封装网络请求功能，API面向业务层更友好，基础功能包括GET、POST、下载、单文件上传、多文件上传、取消网络请求。此外拓展出缓存功能，缓存分为内存缓存和磁盘缓存。       
 1.1版本：新增重复请求管理功能。        
-1.2版本：上层的API没有修改，缓存那里新增LRU缓存淘汰算法，具体实现，可以看XD_LRUManager。
+1.2版本：上层的API没有修改，缓存那里新增LRU缓存淘汰算法，具体实现，可以看XD_LRUManager。     
 1.21版本：修改了部分API，新添加一个缓存管理类，支持过期检验，优化LRU算法的实现。
 # Usage
 
@@ -183,7 +183,10 @@ POST请求
 自动清理缓存
 
 ```ObjC
-    //每次网络请求的时候，检查此时磁盘中的缓存大小，阈值默认是40MB，如果超过阈值，则清理LRU缓存,同时也会清理过期缓存，缓存默认SSL是7天，磁盘缓存的大小和SSL的设置可以通过该方法[XDCacheManager shareManager] setCacheTime: diskCapacity:]设置
+    //每次网络请求的时候，检查此时磁盘中的缓存大小，阈值默认是40MB，如果超过阈值，则清理LRU缓
+    //存,同时也会清理过期缓存，缓存默认SSL是7天，磁盘缓存的大小和SSL的设置可以通过该方法
+    //[XDCacheManager shareManager] setCacheTime: diskCapacity:]设置。
+    
     [[XDCacheManager shareManager] clearLRUCache];
 ```
 
