@@ -150,17 +150,17 @@ static NSTimeInterval   requestTimeout = 20.f;
                   }];
     
     if ([self haveSameRequestInTasksPool:session] && !refresh) {
+        //取消新请求
         [session cancel];
         return session;
     }else {
+        //取消旧请求
         XDURLSessionTask *oldTask = [self cancleSameRequestInTasksPool:session];
         if (oldTask) [[self allTasks] removeObject:oldTask];
-        [session resume];
         if (session) [[self allTasks] addObject:session];
+        [session resume];
         return session;
     }
-    
-    return session;
 }
 
 #pragma mark - post
@@ -214,8 +214,8 @@ static NSTimeInterval   requestTimeout = 20.f;
     }else {
         XDURLSessionTask *oldTask = [self cancleSameRequestInTasksPool:session];
         if (oldTask) [[self allTasks] removeObject:oldTask];
-        [session resume];
         if (session) [[self allTasks] addObject:session];
+        [session resume];
         return session;
     }
 }
@@ -368,7 +368,7 @@ static NSTimeInterval   requestTimeout = 20.f;
     
     if (fileUrl) {
         if (successBlock) successBlock(fileUrl);
-        return session;
+        return nil;
     }
     
     if (url) {

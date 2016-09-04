@@ -20,7 +20,7 @@
 + (BOOL)haveSameRequestInTasksPool:(XDURLSessionTask *)task;
 
 /**
- *  取消旧请求
+ *  如果有旧请求则取消旧请求
  *
  *  @param task 新请求
  *
