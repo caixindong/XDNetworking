@@ -21,24 +21,25 @@
     
     NSLog(@"size is %lu",(unsigned long)[XDNetworking totalCacheSize]);
     
-
+    
 
     
     
 }
 - (IBAction)sendRequest:(UIButton *)sender {
 
-    [XDNetworking postWithUrl:@"http://115.29.228.168:9191/workmap_dianAn/command/command.do?opCommand=userAction"
+    [XDNetworking getWithUrl:@"http://115.29.228.168:9191/workmap_dianAn/command/command.do?opCommand=userAction"
                refreshRequest:NO
                         cache:YES params:@{@"action":@"getDataList",
                                                                                                                                      @"project_id":@"561113"
                                                                                                                                      } progressBlock:^(int64_t bytesRead, int64_t totalBytes) {
                                                                                                                                          
                                                                                                                                      } successBlock:^(id response) {
-                                                                                                                                         
+                                                               
                                                                                                                                      } failBlock:^(NSError *error) {
                                                                                                                                          
                                                                                                                                      }];
+    NSLog(@"%@",[XDNetworking currentRunningTasks]);
 
 }
 
