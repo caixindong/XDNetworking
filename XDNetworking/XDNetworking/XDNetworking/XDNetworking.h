@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "XDNetworkingMacro.h"
 
 /**
  *  网络状态

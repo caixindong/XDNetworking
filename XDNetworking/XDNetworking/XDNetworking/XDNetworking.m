@@ -12,6 +12,9 @@
 #import "XDNetworking+requestManager.h"
 #import "XDCacheManager.h"
 
+#define XD_ERROR_IMFORMATION @"网络出现错误，请检查网络连接"
+
+#define XD_ERROR [NSError errorWithDomain:@"com.caixindong.XDNetworking.ErrorDomain" code:-999 userInfo:@{ NSLocalizedDescriptionKey:XD_ERROR_IMFORMATION}]
 
 static NSMutableArray   *requestTasksPool;
 

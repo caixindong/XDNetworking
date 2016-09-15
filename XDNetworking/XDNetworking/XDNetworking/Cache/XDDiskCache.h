@@ -1,17 +1,14 @@
 //
-//  XDDistCache.h
+//  XDDiskCache.h
 //  XDNetworking
 //
-//  Created by 蔡欣东 on 2016/7/25.
+//  Created by 蔡欣东 on 2016/9/15.
 //  Copyright © 2016年 蔡欣东. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-/**
- *  到时可以拓展磁盘缓存策略
- */
-@interface XDDistCache : NSObject
+@interface XDDiskCache : NSObject
 
 /**
  *  将数据写入磁盘
@@ -22,7 +19,7 @@
  */
 + (void)writeData:(id)data
             toDir:(NSString *)directory
-            filename:(NSString *)filename;
+         filename:(NSString *)filename;
 
 /**
  *  从磁盘读取数据

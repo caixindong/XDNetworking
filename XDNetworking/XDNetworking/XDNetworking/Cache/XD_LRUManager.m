@@ -7,7 +7,6 @@
 //
 
 #import "XD_LRUManager.h"
-#import "XDNetworkingMacro.h"
 
 static XD_LRUManager *manager = nil;
 
@@ -25,8 +24,8 @@ static NSString *const XD_LRUManagerName = @"XD_LRUManagerName";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[XD_LRUManager alloc] init];
-        if (XD_NSUSERDEFAULT_GETTER(XD_LRUManagerName)) {
-            operationQueue = [NSMutableArray arrayWithArray:(NSArray *)XD_NSUSERDEFAULT_GETTER(XD_LRUManagerName)];
+        if ([[NSUserDefaults standardUserDefaults] objectForKey:XD_LRUManagerName]) {
+            operationQueue = [NSMutableArray arrayWithArray:(NSArray *)[[NSUserDefaults standardUserDefaults] objectForKey:XD_LRUManagerName]];
         }else {
                 operationQueue = [NSMutableArray array];   
         }
@@ -53,7 +52,8 @@ static NSString *const XD_LRUManagerName = @"XD_LRUManagerName";
     
     [operationQueue addObject:newDic];
     
-    XD_NSUSERDEFAULT_SETTER([operationQueue copy], XD_LRUManagerName);
+    [[NSUserDefaults standardUserDefaults] setObject:[operationQueue copy] forKey:XD_LRUManagerName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)refreshIndexOfFileNode:(NSString *)filename {
@@ -82,7 +82,8 @@ static NSString *const XD_LRUManagerName = @"XD_LRUManagerName";
             [operationQueue removeObjectAtIndex:0];
         }
         
-        XD_NSUSERDEFAULT_SETTER([operationQueue copy], XD_LRUManagerName);
+        [[NSUserDefaults standardUserDefaults] setObject:[operationQueue copy] forKey:XD_LRUManagerName];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     return [result copy];
 

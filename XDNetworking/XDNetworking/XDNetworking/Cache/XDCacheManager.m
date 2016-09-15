@@ -8,10 +8,9 @@
 
 #import "XDCacheManager.h"
 #import "XDMemoryCache.h"
-#import "XDDistCache.h"
+#import "XDDiskCache.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "XD_LRUManager.h"
-#import "XDNetworkingMacro.h"
 
 static NSString *const cacheDirKey = @"cacheDirKey";
 
@@ -63,12 +62,13 @@ static NSTimeInterval cacheTime = 7 * 24 * 60 * 60;
         //缓存到磁盘中
         //磁盘路径
         NSString *directoryPath = nil;
-        directoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
+        directoryPath = [[NSUserDefaults standardUserDefaults] objectForKey:cacheDirKey];
         if (!directoryPath) {
             directoryPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:@"XDNetworking"] stringByAppendingPathComponent:@"networkCache"];
-            XD_NSUSERDEFAULT_SETTER(directoryPath,cacheDirKey);
+            [[NSUserDefaults standardUserDefaults] setObject:directoryPath forKey:cacheDirKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
         }
-        [XDDistCache writeData:data toDir:directoryPath filename:hash];
+        [XDDiskCache writeData:data toDir:directoryPath filename:hash];
         
         [[XD_LRUManager shareManager] addFileNode:hash];
     }
@@ -89,10 +89,10 @@ static NSTimeInterval cacheTime = 7 * 24 * 60 * 60;
     cacheData = [XDMemoryCache readDataWithKey:hash];
     
     if (!cacheData) {
-        NSString *directoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
+        NSString *directoryPath = [[NSUserDefaults standardUserDefaults] objectForKey:cacheDirKey];
         
         if (directoryPath) {
-            cacheData = [XDDistCache readDataFromDir:directoryPath filename:hash];
+            cacheData = [XDDiskCache readDataFromDir:directoryPath filename:hash];
             
             if (cacheData) [[XD_LRUManager shareManager] refreshIndexOfFileNode:hash];
         }
@@ -123,15 +123,16 @@ static NSTimeInterval cacheTime = 7 * 24 * 60 * 60;
     }
     
     NSString *directoryPath = nil;
-    directoryPath = XD_NSUSERDEFAULT_GETTER(downloadDirKey);
+    directoryPath = [[NSUserDefaults standardUserDefaults] objectForKey:downloadDirKey];
     if (!directoryPath) {
         directoryPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0] stringByAppendingPathComponent:@"XDNetworking"] stringByAppendingPathComponent:@"download"];
         
-        XD_NSUSERDEFAULT_SETTER(directoryPath, downloadDirKey);
+        [[NSUserDefaults standardUserDefaults] setObject:directoryPath forKey:downloadDirKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
     
-    [XDDistCache writeData:data toDir:directoryPath filename:fileName];
+    [XDDiskCache writeData:data toDir:directoryPath filename:fileName];
     
 }
 
@@ -157,9 +158,9 @@ static NSTimeInterval cacheTime = 7 * 24 * 60 * 60;
     }
     
     
-    NSString *directoryPath = XD_NSUSERDEFAULT_GETTER(downloadDirKey);
+    NSString *directoryPath = [[NSUserDefaults standardUserDefaults] objectForKey:downloadDirKey];
     
-    if (directoryPath) data = [XDDistCache readDataFromDir:directoryPath filename:fileName];
+    if (directoryPath) data = [XDDiskCache readDataFromDir:directoryPath filename:fileName];
     
     if (data) {
         NSString *path = [directoryPath stringByAppendingPathComponent:fileName];
@@ -170,47 +171,47 @@ static NSTimeInterval cacheTime = 7 * 24 * 60 * 60;
 }
 
 - (NSUInteger)totalCacheSize {
-    NSString *diretoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
+    NSString *diretoryPath = [[NSUserDefaults standardUserDefaults] objectForKey: cacheDirKey];
     
-    return [XDDistCache dataSizeInDir:diretoryPath];
+    return [XDDiskCache dataSizeInDir:diretoryPath];
 }
 
 - (NSUInteger)totalDownloadDataSize {
-    NSString *diretoryPath = XD_NSUSERDEFAULT_GETTER(downloadDirKey);
+    NSString *diretoryPath = [[NSUserDefaults standardUserDefaults] objectForKey: downloadDirKey];
     
-    return [XDDistCache dataSizeInDir:diretoryPath];
+    return [XDDiskCache dataSizeInDir:diretoryPath];
 }
 
 - (void)clearDownloadData {
-    NSString *diretoryPath = XD_NSUSERDEFAULT_GETTER(downloadDirKey);
+    NSString *diretoryPath = [[NSUserDefaults standardUserDefaults] objectForKey:downloadDirKey];
     
-    [XDDistCache clearDataIinDir:diretoryPath];
+    [XDDiskCache clearDataIinDir:diretoryPath];
 }
 
 - (NSString *)getDownDirectoryPath {
-    NSString *diretoryPath = XD_NSUSERDEFAULT_GETTER(downloadDirKey);
+    NSString *diretoryPath = [[NSUserDefaults standardUserDefaults] objectForKey:downloadDirKey];
     return diretoryPath;
 }
 
 - (NSString *)getCacheDiretoryPath {
-    NSString *diretoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
+    NSString *diretoryPath = [[NSUserDefaults standardUserDefaults] objectForKey:cacheDirKey];
     return diretoryPath;
 }
 
 - (void)clearTotalCache {
-    NSString *directoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
+    NSString *directoryPath = [[NSUserDefaults standardUserDefaults] objectForKey:cacheDirKey];
     
-    [XDDistCache clearDataIinDir:directoryPath];
+    [XDDiskCache clearDataIinDir:directoryPath];
 }
 
 - (void)clearLRUCache {
     if ([self totalCacheSize] > diskCapacity) {
         NSArray *deleteFiles = [[XD_LRUManager shareManager] removeLRUFileNodeWithCacheTime:cacheTime];
-        NSString *directoryPath = XD_NSUSERDEFAULT_GETTER(cacheDirKey);
+        NSString *directoryPath = [[NSUserDefaults standardUserDefaults] objectForKey:cacheDirKey];
         if (directoryPath && deleteFiles.count > 0) {
             [deleteFiles enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 NSString *filePath = [directoryPath stringByAppendingPathComponent:obj];
-                [XDDistCache deleteCache:filePath];
+                [XDDiskCache deleteCache:filePath];
             }];
             
         }

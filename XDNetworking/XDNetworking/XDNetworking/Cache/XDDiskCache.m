@@ -1,15 +1,14 @@
 //
-//  XDDistCache.m
+//  XDDiskCache.m
 //  XDNetworking
 //
-//  Created by 蔡欣东 on 2016/7/25.
+//  Created by 蔡欣东 on 2016/9/15.
 //  Copyright © 2016年 蔡欣东. All rights reserved.
 //
 
-#import "XDDistCache.h"
+#import "XDDiskCache.h"
 
-
-@implementation XDDistCache
+@implementation XDDiskCache
 
 + (void)writeData:(id)data
             toDir:(NSString *)directory
@@ -101,7 +100,7 @@
                 NSLog(@"删除文件出现错误出现错误：%@",error.localizedDescription);
             }
         }else {
-            NSLog(@"不存在文件");   
+            NSLog(@"不存在文件");
         }
     }
 }
