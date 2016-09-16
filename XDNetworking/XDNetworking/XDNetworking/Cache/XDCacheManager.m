@@ -44,7 +44,7 @@ static NSTimeInterval cacheTime = 7 * 24 * 60 * 60;
     assert(requestUrl);
     
     if (!params) params = @{};
-    NSString *originString = [NSString stringWithFormat:@"%@-%@",requestUrl,params];
+    NSString *originString = [NSString stringWithFormat:@"%@%@",requestUrl,params];
     NSString *hash = [self md5:originString];
     
     NSData *data = nil;

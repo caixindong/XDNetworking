@@ -10,6 +10,12 @@
 
 @interface XDCacheManager : NSObject
 
+
+/**
+ *  默认的磁盘空间是40MB，缓存有效期是7天
+ *
+ *  @return 
+ */
 + (XDCacheManager *)shareManager;
 
 /**

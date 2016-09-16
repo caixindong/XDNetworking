@@ -157,7 +157,7 @@ static NSTimeInterval   requestTimeout = 20.f;
         [session cancel];
         return session;
     }else {
-        //取消旧请求
+        //无论是否有旧请求，先执行取消旧请求，反正都需要刷新请求
         XDURLSessionTask *oldTask = [self cancleSameRequestInTasksPool:session];
         if (oldTask) [[self allTasks] removeObject:oldTask];
         if (session) [[self allTasks] addObject:session];

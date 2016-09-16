@@ -133,7 +133,7 @@ typedef XDResponseFailBlock XDDownloadFailBlock;
  *
  *  @param url              请求路径
  *  @param cache            是否缓存
- *  @param refresh          是否刷新请求(遇到重复请求，若为YES，则会取消旧的请求，用新的请求，若为NO，则忽略新请   求，用旧请求)
+ *  @param refresh          是否刷新请求(遇到重复请求，若为YES，则会取消旧的请求，用新的请求，若为NO，则忽略新请求，用旧请求)
  *  @param params           拼接参数
  *  @param progressBlock    进度回调
  *  @param successBlock     成功回调
@@ -191,13 +191,13 @@ typedef XDResponseFailBlock XDDownloadFailBlock;
  *  @return 返回的对象中可取消请求
  */
 + (XDURLSessionTask *)uploadFileWithUrl:(NSString *)url
-                                fileData:(NSData *)data
-                                    type:(NSString *)type
-                                    name:(NSString *)name
-                                mimeType:(NSString *)mimeType
-                           progressBlock:(XDUploadProgressBlock)progressBlock
-                            successBlock:(XDResponseSuccessBlock)successBlock
-                               failBlock:(XDResponseFailBlock)failBlock;
+                               fileData:(NSData *)data
+                                   type:(NSString *)type
+                                   name:(NSString *)name
+                               mimeType:(NSString *)mimeType
+                          progressBlock:(XDUploadProgressBlock)progressBlock
+                           successBlock:(XDResponseSuccessBlock)successBlock
+                              failBlock:(XDResponseFailBlock)failBlock;
 
 
 /**

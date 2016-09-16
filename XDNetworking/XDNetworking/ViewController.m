@@ -30,16 +30,17 @@
 
     [XDNetworking getWithUrl:@"http://115.29.228.168:9191/workmap_dianAn/command/command.do?opCommand=userAction"
                refreshRequest:NO
-                        cache:YES params:@{@"action":@"getDataList",
-                                                                                                                                     @"project_id":@"561113"
-                                                                                                                                     } progressBlock:^(int64_t bytesRead, int64_t totalBytes) {
+                        cache:YES
+                      params:@{@"action":@"getDataList",@"project_id":@"561113"}
+               progressBlock:^(int64_t bytesRead, int64_t totalBytes) {
                                                                                                                                          
-                                                                                                                                     } successBlock:^(id response) {
-                                                               
-                                                                                                                                     } failBlock:^(NSError *error) {
+               }
+                successBlock:^(id response) {
+                
+                }
+                   failBlock:^(NSError *error) {
                                                                                                                                          
-                                                                                                                                     }];
-    NSLog(@"%@",[XDNetworking currentRunningTasks]);
+    }];
 
 }
 
